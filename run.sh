@@ -1,5 +1,7 @@
 #!/bin/bash
+REDIS_HOST=${REDIS_PORT_6379_TCP_ADDR:-$REDIS_HOST}
 REDIS_HOST=${REDIS_HOST:-127.0.0.1}
+REDIS_PORT=${REDIS_PORT_6379_TCP_PORT:-$REDIS_PORT}
 REDIS_PORT=${REDIS_PORT:-6379}
 LOG_DIR=/var/log/shipyard
 NGINX_RESOLVER=${NGINX_RESOLVER:-`cat /etc/resolv.conf | grep ^nameserver | head -1 | awk '{ print $2; }'`}
