@@ -1,13 +1,13 @@
-FROM ubuntu:12.04
-MAINTAINER Shipyard Project "http://shipyard-project.com"
-RUN apt-get -qq update
-RUN apt-get install -y libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make wget
-RUN wget http://openresty.org/download/ngx_openresty-1.4.3.3.tar.gz -O /tmp/nginx.tar.gz
-RUN (cd /tmp && tar zxf nginx.tar.gz)
-RUN (cd /tmp/ngx_* && ./configure --with-luajit)
-RUN (cd /tmp/ngx_* && make install)
-ADD run.sh /usr/local/bin/run
-VOLUME /var/log/shipyard
-EXPOSE 80
-EXPOSE 443
-CMD ["/bin/sh", "-e", "/usr/local/bin/run"]
+from ubuntu:12.04
+maintainer Shipyard Project "http://shipyard-project.com"
+run apt-get -qq update
+run apt-get install -y libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make wget
+run wget http://openresty.org/download/ngx_openresty-1.4.3.3.tar.gz -O /tmp/nginx.tar.gz
+run (cd /tmp && tar zxf nginx.tar.gz)
+run (cd /tmp/ngx_* && ./configure --with-luajit)
+run (cd /tmp/ngx_* && make install)
+add run.sh /usr/local/bin/run
+volume /var/log/shipyard
+expose 80
+expose 443
+cmd ["/bin/sh", "-e", "/usr/local/bin/run"]
