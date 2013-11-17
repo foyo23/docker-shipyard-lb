@@ -32,6 +32,7 @@ http {
   server {
     listen 80;
     access_log $LOG_DIR/nginx_access.log;
+    client_max_body_size 0;
 
     location / {
       proxy_pass http://app_router;
