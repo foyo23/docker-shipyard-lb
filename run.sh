@@ -1,12 +1,17 @@
 #!/bin/bash
+HTTP_PORT=80
+HTTPS_PORT=443
 REDIS_HOST=${REDIS_PORT_6379_TCP_ADDR:-$REDIS_HOST}
 REDIS_HOST=${REDIS_HOST:-127.0.0.1}
 REDIS_PORT=${REDIS_PORT_6379_TCP_PORT:-$REDIS_PORT}
 REDIS_PORT=${REDIS_PORT:-6379}
+SSL_CERT_PATH=${SSL_CERT_PATH:-}
+SSL_KEY_PATH=${SSL_KEY_PATH:-}
 LOG_DIR=/var/log/shipyard
 NGINX_RESOLVER=${NGINX_RESOLVER:-`cat /etc/resolv.conf | grep ^nameserver | head -1 | awk '{ print $2; }'`}
 APP_ROUTER_UPSTREAMS=${APP_ROUTER_UPSTREAMS:-127.0.0.1:8001}
 mkdir -p $LOG_DIR
+NGINX_CONF=/etc/shipyard.conf
 ROUTER_CFG=""
 
 for H in $APP_ROUTER_UPSTREAMS
@@ -14,7 +19,7 @@ do
     ROUTER_CFG="$ROUTER_CFG    server $H;"
 done
 # nginx
-cat << EOF > /etc/shipyard.conf
+cat << EOF > $NGINX_CONF
 daemon off;
 worker_processes  1;
 error_log $LOG_DIR/nginx_error.log;
@@ -30,7 +35,19 @@ http {
   }
 
   server {
-    listen 80;
+    listen $HTTP_PORT;
+EOF
+
+# ssl
+if [ ! -z "$SSL_CERT_PATH" ] && [ ! -z "$SSL_KEY_PATH" ] ; then
+    cat << EOF >> $NGINX_CONF
+    listen $HTTPS_PORT ssl;
+    ssl_certificate $SSL_CERT_PATH;
+    ssl_certificate_key $SSL_KEY_PATH;
+EOF
+fi
+
+cat << EOF >> $NGINX_CONF
     access_log $LOG_DIR/nginx_access.log;
     client_max_body_size 0;
 
