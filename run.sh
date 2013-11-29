@@ -14,6 +14,11 @@ mkdir -p $LOG_DIR
 NGINX_CONF=/etc/shipyard.conf
 ROUTER_CFG=""
 
+# check for router link
+if [ ! -z "$APP_ROUTER_PORT_80_TCP_ADDR" ] ; then
+    APP_ROUTER_UPSTREAMS="${APP_ROUTER_PORT_80_TCP_ADDR}:${APP_ROUTER_PORT_80_TCP_PORT}"
+fi
+
 for H in $APP_ROUTER_UPSTREAMS
 do
     ROUTER_CFG="$ROUTER_CFG    server $H;"
