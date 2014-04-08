@@ -1,7 +1,6 @@
 from ubuntu:12.04
 maintainer Shipyard Project "http://shipyard-project.com"
 run apt-get update
-run apt-get -y upgrade
 run apt-get install -y libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make wget
 run wget http://openresty.org/download/ngx_openresty-1.4.3.3.tar.gz -O /tmp/nginx.tar.gz
 run (cd /tmp && tar zxf nginx.tar.gz)
