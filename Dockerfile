@@ -1,4 +1,4 @@
-from ubuntu:12.04
+from stackbrew/ubuntu:12.04
 maintainer Shipyard Project "http://shipyard-project.com"
 run apt-get update
 run apt-get install -y libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make wget
