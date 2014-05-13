@@ -13,6 +13,7 @@ APP_ROUTER_UPSTREAMS=${APP_ROUTER_UPSTREAMS:-127.0.0.1:8001}
 mkdir -p $LOG_DIR
 NGINX_CONF=/etc/shipyard.conf
 ROUTER_CFG=""
+FORCE_HTTPS=${FORCE_HTTPS:-false}
 
 # check for fig env
 if [ ! -z "$SHIPYARD_REDIS_1_PORT_6379_TCP_ADDR" ]; then
@@ -45,10 +46,22 @@ http {
   upstream app_router {
     $ROUTER_CFG
   }
+EOF
 
+if [ ! -z "$SSL_CERT_PATH" ] && [ ! -z "$SSL_KEY_PATH" ] && [ "$FORCE_HTTPS" = true ] ; then
+cat << EOF >> $NGINX_CONF
+  server {
+    listen $HTTP_PORT;
+    return 302 https://\$http_host\$request_uri;
+  }
+  server {
+EOF
+else
+cat << EOF >> $NGINX_CONF
   server {
     listen $HTTP_PORT;
 EOF
+fi
 
 # ssl
 if [ ! -z "$SSL_CERT_PATH" ] && [ ! -z "$SSL_KEY_PATH" ] ; then
